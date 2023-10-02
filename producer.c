@@ -28,7 +28,7 @@ void* gShmPtr;
 
 // You won't necessarily need all the functions below
 void Producer(int, int, int);
-void InitShm(int, int);
+void InitSharedMemory(int, int);
 void SetBufSize(int);
 void SetItemCnt(int);
 void SetIn(int);
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
 
 
         // Function that creates a shared memory segment and initializes its header
-        InitShm(bufSize, itemCnt);        
+        InitSharedMemory(bufSize, itemCnt);        
 
 	/* fork a child process */ 
 	pid = fork();
@@ -109,22 +109,33 @@ int main(int argc, char* argv[])
         return 0;
 }
 
-
-void InitShm(int bufSize, int itemCnt)
+//init shared memory
+void InitSharedMemory(int bufSize, int itemCnt)
 {
-    int in = 0;
-    int out = 0;
-    const char *name = "OS_HW1_kmunk"; // Name of shared memory object to be passed to shm_open
+        int in = 0;
+        int out = 0;
+        const char *name = "OS_HW1_kmunk"; // Name of shared memory object to be passed to shm_open
 
-     // Write code here to create a shared memory block and map it to gShmPtr  
-     // Use the above name.
-     // **Extremely Important: map the shared memory block for both reading and writing 
-     // Use PROT_READ | PROT_WRITE
-	
-    // Write code here to set the values of the four integers in the header
-    // Just call the functions provided below, like this
-    SetBufSize(bufSize); 	
-       
+        int sharedMemoryDescriptor = shm_open(name, O_CREAT | O_RDWR, 0666);
+
+        ftruncate(sharedMemoryDescriptor, SHM_SIZE);
+
+        // Write code here to create a shared memory block and map it to gShmPtr  
+        // Use the above name.
+        // **Extremely Important: map the shared memory block for both reading and writing 
+        // Use PROT_READ | PROT_WRITE
+
+        gShmPtr = mmap(0, SHM_SIZE, PROT_READ | PROT_WRITE, MAP.SHARED, sharedMemoryDescriptor, 0);
+
+        // Write code here to set the values of the four integers in the header
+        // Just call the functions provided below, like 
+        
+        SetItemCnt(itemCnt);
+        SetBufSize(bufSize);
+        SetIn(in);
+        SetOut(out);
+        
+
 	   
 }
 
@@ -144,7 +155,6 @@ void Producer(int bufSize, int itemCnt, int randSeed)
     // printf("Producing Item %d with value %d at Index %d\n", i, val, in);
     // where i is the item number, val is the item value, in is its index in the bounded buffer
     	
-	
 	
 	
     
@@ -188,6 +198,11 @@ int GetHeaderVal(int i)
 void SetHeaderVal(int i, int val)
 {
        // Write the implementation
+       //using memset
+       //syntax void* memset(void* dest, int ch, size_t count);
+
+       void* ptr = gShmPtr + i*sizeof(int);
+       memset(ptr, val, sizeof(int));
 
 }
 
