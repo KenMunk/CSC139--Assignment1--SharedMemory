@@ -130,6 +130,10 @@ void InitSharedMemory(int bufSize, int itemCnt)
         // Write code here to set the values of the four integers in the header
         // Just call the functions provided below, like 
         
+        printf("Setting Buffer Size Assigned as %i\n", bufSize);
+        printf("Setting Item Count Assigned as %i\n", itemCnt);
+        printf("Setting In Index set as %i\n", in);
+        printf("Setting Out Index set as %i\n", out);
         SetItemCnt(itemCnt);
         SetBufSize(bufSize);
         SetIn(in);
