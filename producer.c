@@ -4,7 +4,7 @@ Fall 2023
 First Assignment
 Munk, Kenneth
 Section # 01
-OSs Tested on: such as Linux, Mac, etc.
+OSs Tested on: Ubuntu 20.04 LTS (VM)
 */
 
 #include <stdio.h>
