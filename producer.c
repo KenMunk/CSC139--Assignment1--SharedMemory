@@ -65,15 +65,15 @@ int main(int argc, char* argv[])
                 
                 printf("Invalid argument detected\n");
                 if(bufSize <= 0 || bufSize > 500){
-                        printf("bufSize of " << argv[1] +" is invalid and not in range of 2 to 500\n"); 
+                        printf("bufSize of " << argv[1] <<" is invalid and not in range of 2 to 500\n"); 
                 }
                 
                 if(itemCnt <= 0){
-                        printf("itemCnt of " << argv[1] +" is invalid\n"); 
+                        printf("itemCnt of " << argv[1] <<" is invalid\n"); 
                 }
 
                 if(randSeed <= 0){
-                        printf("randSeed of " << argv[1] +" is invalid\n"); 
+                        printf("randSeed of " << argv[1] <<" is invalid\n"); 
                 }
 
                 exit(1);
