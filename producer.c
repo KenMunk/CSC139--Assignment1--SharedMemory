@@ -139,10 +139,10 @@ void InitSharedMemory(int bufSize, int itemCnt)
         SetIn(in);
         SetOut(out);
         printf("Shared Memory initialized and headers written to\n");
-        printf("Buffer Size Assigned as %i\n", GetBufSize());
-        printf("Item Count Assigned as %i\n", GetItemCnt());
-        printf("In Index set as %i\n", GetIn());
-        printf("Out Index set as %i\n", GetOut());
+        printf("Buffer Size Assigned as %i\n", &GetBufSize());
+        printf("Item Count Assigned as %i\n", &GetItemCnt());
+        printf("In Index set as %i\n", &GetIn());
+        printf("Out Index set as %i\n", &GetOut());
 
 
 
