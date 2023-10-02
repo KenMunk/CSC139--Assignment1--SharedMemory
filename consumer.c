@@ -2,8 +2,8 @@
 CSC139 
 Fall 2023
 First Assignment
-Last Name, First Name
-Section #
+Munk, Kenneth
+Section # 01
 OSs Tested on: such as Linux, Mac, etc.
 */
 

@@ -2,8 +2,8 @@
 CSC139 
 Fall 2023
 First Assignment
-Last Name, First Name
-Section #
+Munk, Kenneth
+Section # 01
 OSs Tested on: such as Linux, Mac, etc.
 */
 
@@ -60,6 +60,25 @@ int main(int argc, char* argv[])
 	randSeed = atoi(argv[3]);
 	
 	// Write code to check the validity of the command-line arguments
+
+        if(bufSize <= 1 || bufSize > 500 || itemCnt <= 0 || randSeed <= 0){
+                
+                printf("Invalid argument detected\n");
+                if(bufSize <= 0 || bufSize > 500){
+                        printf("bufSize of " + argv[1] +" is invalid and not in range of 2 to 500\n"); 
+                }
+                
+                if(itemCnt <= 0){
+                        printf("itemCnt of " + argv[1] +" is invalid\n"); 
+                }
+
+                if(randSeed <= 0){
+                        printf("randSeed of " + argv[1] +" is invalid\n"); 
+                }
+
+                exit(1);
+        }
+
 
         // Function that creates a shared memory segment and initializes its header
         InitShm(bufSize, itemCnt);        
