@@ -196,7 +196,7 @@ int GetHeaderVal(int i)
 {
         int val;
         void* ptr = gShmPtr + i*sizeof(int);
-        memcpy(val, ptr, sizeof(int));
+        memcpy(&val, ptr, sizeof(int));
         return val;
 }
 
