@@ -255,8 +255,10 @@ void WriteAtBufIndex(int indx, int val)
 // Read the val at the given index in the bounded buffer
 int ReadAtBufIndex(int indx)
 {
+        int output;
         // Write the implementation
- 
+        void* ptr = gShmPtr + 4*sizeof(int) + indx*sizeof(int);
+        memcpy(&output, ptr, sizeof(int));
 }
 
 // Get a random number in the range [x, y]

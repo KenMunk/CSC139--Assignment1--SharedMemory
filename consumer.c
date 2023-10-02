@@ -38,7 +38,7 @@ int ReadAtBufIndex(int);
 
 int main()
 {
-    const char *name = "OS_HW1_yourName"; // Name of shared memory block to be passed to shm_open
+    const char *name = "OS_HW1_kmunk"; // Name of shared memory block to be passed to shm_open
     int bufSize; // Bounded buffer size
     int itemCnt; // Number of items to be consumed
     int in; // Index of next item to produce
@@ -103,7 +103,11 @@ int GetHeaderVal(int i)
 void SetHeaderVal(int i, int val)
 {
         // Write the implementation
-
+        
+       int payload = val;
+       
+       void* ptr = gShmPtr + i*sizeof(int);
+       memcpy(ptr, &payload, sizeof(int));
 }
 
 // Get the value of shared variable "bufSize"
@@ -135,13 +139,17 @@ int GetOut()
 void WriteAtBufIndex(int indx, int val)
 {
         // Write the implementation
+        void* ptr = gShmPtr + 4*sizeof(int) + indx*sizeof(int);
+	memcpy(ptr, &val, sizeof(int));
 
 }
 
 // Read the val at the given index in the bounded buffer
 int ReadAtBufIndex(int indx)
 {
+        int output;
         // Write the implementation
- 
+        void* ptr = gShmPtr + 4*sizeof(int) + indx*sizeof(int);
+        memcpy(&output, ptr, sizeof(int));
 }
 
