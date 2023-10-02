@@ -196,7 +196,7 @@ int GetHeaderVal(int i)
 {
         int val;
         void* ptr = gShmPtr + i*sizeof(int);
-        memcpy(&val, ptr, sizeof(int));
+        memcpy(val, ptr, sizeof(int));
         return val;
 }
 
@@ -208,7 +208,7 @@ void SetHeaderVal(int i, int val)
        //syntax void* memset(void* dest, int ch, size_t count);
 
        void* ptr = gShmPtr + i*sizeof(int);
-       memset(ptr, &val, sizeof(int));
+       memset(ptr, val, sizeof(int));
 
 }
 
