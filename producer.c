@@ -125,7 +125,7 @@ void InitSharedMemory(int bufSize, int itemCnt)
         // **Extremely Important: map the shared memory block for both reading and writing 
         // Use PROT_READ | PROT_WRITE
 
-        gShmPtr = mmap(0, SHM_SIZE, PROT_READ | PROT_WRITE, MAP.SHARED, sharedMemoryDescriptor, 0);
+        gShmPtr = mmap(0, SHM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, sharedMemoryDescriptor, 0);
 
         // Write code here to set the values of the four integers in the header
         // Just call the functions provided below, like 
