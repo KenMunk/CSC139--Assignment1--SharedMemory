@@ -65,15 +65,15 @@ int main(int argc, char* argv[])
                 
                 printf("Invalid argument detected\n");
                 if(bufSize <= 0 || bufSize > 500){
-                        printf("bufSize of " << argv[1] <<" is invalid and not in range of 2 to 500\n"); 
+                        printf("bufSize of %s is invalid and not in range of 2 to 500\n",argv[1]); 
                 }
                 
                 if(itemCnt <= 0){
-                        printf("itemCnt of " << argv[1] <<" is invalid\n"); 
+                        printf("itemCnt of %s is invalid\n", argv[1]); 
                 }
 
                 if(randSeed <= 0){
-                        printf("randSeed of " << argv[1] <<" is invalid\n"); 
+                        printf("randSeed of %s is invalid\n", argv[3]); 
                 }
 
                 exit(1);
@@ -114,7 +114,7 @@ void InitShm(int bufSize, int itemCnt)
 {
     int in = 0;
     int out = 0;
-    const char *name = "OS_HW1_yourName"; // Name of shared memory object to be passed to shm_open
+    const char *name = "OS_HW1_kmunk"; // Name of shared memory object to be passed to shm_open
 
      // Write code here to create a shared memory block and map it to gShmPtr  
      // Use the above name.
