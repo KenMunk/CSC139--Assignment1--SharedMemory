@@ -4,7 +4,7 @@ Fall 2023
 First Assignment
 Munk, Kenneth
 Section # 01
-OSs Tested on: such as Linux, Mac, etc.
+OSs Tested on: Ubuntu 20.04 LTS (VM), Linux (ecs-pa-coding1.ecs.csus.edu)
 */
 
 #include <stdio.h>
@@ -38,9 +38,10 @@ int ReadAtBufIndex(int);
 
 int main()
 {
-    const char *name = "OS_HW1_kmunk"; // Name of shared memory block to be passed to shm_open
+    const char *name = "OS_HW1_Kenneth_Sherwood_Munk"; // Name of shared memory block to be passed to shm_open
     int bufSize; // Bounded buffer size
     int itemCnt; // Number of items to be consumed
+    int initialCnt;
     int in; // Index of next item to produce
     int out; // Index of next item to consume
      
@@ -49,12 +50,18 @@ int main()
      // **Extremely Important: map the shared memory block for both reading and writing 
      // Use PROT_READ | PROT_WRITE
 
+        int sharedMemoryDescriptor = shm_open(name, O_CREAT | O_RDWR, 0666);
 
+        gShmPtr = mmap(0, SHM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, sharedMemoryDescriptor, 0);
 
      // Write code here to read the four integers from the header of the shared memory block 
      // These are: bufSize, itemCnt, in, out
      // Just call the functions provided below like this:
      bufSize = GetBufSize();
+     itemCnt = GetItemCnt();
+     initialCnt = itemCnt;
+     //in = GetIn();
+     out = GetOut();
 	
      // Write code here to check that the consumer has read the right values: 
      printf("Consumer reading: bufSize = %d\n",bufSize);
@@ -66,7 +73,25 @@ int main()
      // Use the following print statement to report the consumption of an item:
      // printf("Consuming Item %d with value %d at Index %d\n", i, val, out);
      // where i is the item number, val is the item value, out is its index in the bounded buffer
-                
+
+        //had to incorporate a condition where the buffer size is 2 since having a 1 block space between
+        //read and write causes a condition where the production and consumption locks because the next index 
+        //for production is the next consumption and vice versa
+
+        while(itemCnt != 0){
+                out = GetOut();
+                in = GetIn();
+                if(((out != in ) && (((out+1)%bufSize != in) || bufSize == 2)) || in == -1){
+                        int sharedValue;
+                        sharedValue = ReadAtBufIndex(out);
+
+                        printf("Consuming Item %d with value %d at Index %d\n",1+(initialCnt-itemCnt),sharedValue,out);
+
+                        out = (out+1)%bufSize;
+                        itemCnt--;
+                        SetOut(out);
+                }
+        }
           
      // remove the shared memory segment 
      if (shm_unlink(name) == -1) {
@@ -151,5 +176,6 @@ int ReadAtBufIndex(int indx)
         // Write the implementation
         void* ptr = gShmPtr + 4*sizeof(int) + indx*sizeof(int);
         memcpy(&output, ptr, sizeof(int));
+        return(output);
 }
 

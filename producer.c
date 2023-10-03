@@ -4,7 +4,7 @@ Fall 2023
 First Assignment
 Munk, Kenneth
 Section # 01
-OSs Tested on: Ubuntu 20.04 LTS (VM)
+OSs Tested on: Ubuntu 20.04 LTS (VM), Linux (ecs-pa-coding1.ecs.csus.edu)
 */
 
 #include <stdio.h>
@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
                Producer(bufSize, itemCnt, randSeed);
 		
 	       printf("Producer done and waiting for consumer\n");
-	       wait(NULL);		
+	       wait(NULL);
 	       printf("Consumer Completed\n");
         }
     
@@ -114,7 +114,7 @@ void InitSharedMemory(int bufSize, int itemCnt)
 {
         int in = 0;
         int out = 0;
-        const char *name = "OS_HW1_kmunk"; // Name of shared memory object to be passed to shm_open
+        const char *name = "OS_HW1_Kenneth_Sherwood_Munk"; // Name of shared memory object to be passed to shm_open
 
         int sharedMemoryDescriptor = shm_open(name, O_CREAT | O_RDWR, 0666);
 
@@ -153,6 +153,7 @@ void Producer(int bufSize, int itemCnt, int randSeed)
 {
     int in = 0;
     int out = 0;
+    int itemsLeft = itemCnt;
         
     srand(randSeed);
 
@@ -166,9 +167,43 @@ void Producer(int bufSize, int itemCnt, int randSeed)
     // where i is the item number, val is the item value, in is its index in the bounded buffer
     	
 	
-	
-    
-     printf("Producer Completed\n");
+	//How we can go about this is to have a counter of how many items have been written
+        //then while the next index for in is not the index of out we produce an item into the index for in
+        //although this will result in a 1 entry buffer between in and out it matches
+        //up with the pseudocode that was covered in the class.  I could allow for the
+        //use of writing into an index when it is matching the out index but the risk there is
+        //that there will be a data collision which is not preferred.  Same pattern will be used for the
+        //consumer but with the next out index chasing the in index and not reading the next index until the
+        //in index is 1 space away
+
+        //for when the items have all been used we can set the in index to -1 which would allow for the
+        //consumer to complete cycling through and check if the in index is -1 as an exit sequence
+
+        //the producer will be the only process that updates the in data in the header
+        //the consumer will be the only process that updates the out data in the header
+        //this will allow for an asyncronous chase scenario to allow for timing
+        //variations between processes since the consumer is making a few more computations
+        //than the producer for the condition checks
+
+        while(itemsLeft > 0){
+                out = GetOut();
+                in = GetIn();
+                if((in+1)%(bufSize) != out){
+                        int payload;
+                        payload = GetRand(2,2500);
+                        printf("Producing item %d with value %d at Index %d\n", 1+(itemCnt-itemsLeft), payload, in);
+                        WriteAtBufIndex(in, payload);
+                        in = (in + 1)%bufSize;
+                        itemsLeft--;
+                        SetIn(in);
+                }
+                else{
+                        //printf("Waiting for data at position %i to get consumed\n");
+                }
+        }
+        SetIn(-1);
+        printf("Producer Completed\n");
+
 }
 
 // Set the value of shared variable "bufSize"
@@ -259,6 +294,7 @@ int ReadAtBufIndex(int indx)
         // Write the implementation
         void* ptr = gShmPtr + 4*sizeof(int) + indx*sizeof(int);
         memcpy(&output, ptr, sizeof(int));
+        return(output);
 }
 
 // Get a random number in the range [x, y]
@@ -268,3 +304,4 @@ int GetRand(int x, int y)
 	r = x + r % (y-x+1);
         return r;
 }
+
